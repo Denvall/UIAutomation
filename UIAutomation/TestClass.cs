@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Baseclass;
 using NUnit.Framework;
 using System.Diagnostics;
 using System.Threading;
@@ -42,7 +43,11 @@ namespace UIAtomation
             }
         }
     [Test]
-        public void Login()
+        [TestCase("john", "ph")]
+        [TestCase("nhon", "hp")]
+        [TestCase("john", "hp")]
+        public void Login(string loginvalue,string passwordvalue)
+
         {
             var mainWindow = AutomationElement.RootElement.FindFirst(TreeScope.Children, new AndCondition(
                 new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window),
@@ -59,16 +64,30 @@ namespace UIAtomation
                 new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit),
                 new PropertyCondition(AutomationElement.ClassNameProperty, "PasswordBox")));
             var typepassword = PasswordField.GetCurrentPattern(ValuePattern.Pattern) as ValuePattern;
-
-            
-    
-            typelogin.SetValue("john");
-            typepassword.SetValue("hp");
+            typelogin.SetValue(loginvalue);
+            typepassword.SetValue(passwordvalue);
+            string variable = "okButton";
             var OkButton = mainWindow.FindFirst(TreeScope.Children, new AndCondition(
                 new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button),
-                new PropertyCondition(AutomationElement.AutomationIdProperty, "okButton")));
-            var OkButtonClick = OkButton.GetCurrentPattern(InvokePattern.Pattern) as InvokePattern;
-            OkButtonClick.Invoke();
+                new PropertyCondition(AutomationElement.AutomationIdProperty, variable)));
+            ClassicBase.Properties.Invoke.Click(OkButton);
+            Thread.Sleep(1000);
+            if (loginvalue != "john" || passwordvalue != "hp")
+            {
+                    var error = mainWindow.FindFirst(TreeScope.Children, new AndCondition(
+                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window),
+                    new PropertyCondition(AutomationElement.ClassNameProperty, "#32770")));
+                    Assert.IsTrue(ClassicBase.Properties.IsEnabled(error));
+                    string failed = ClassicBase.Properties.GetName(error);
+                    Assert.AreEqual("Login Failed", failed);
+            }
+            else
+            {
+                var johnsmith = mainWindow.FindFirst(TreeScope.Children, new AndCondition(
+                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Text),
+                    new PropertyCondition(AutomationElement.AutomationIdProperty, "usernameTitle")));
+                Assert.AreEqual("John Smith",ClassicBase.Properties.GetName(johnsmith));
+            }
             Thread.Sleep(2000);
 
         }
