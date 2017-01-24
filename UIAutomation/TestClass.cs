@@ -42,7 +42,7 @@ namespace UIAtomation
                 Console.WriteLine("Process " + Param.target_name + " not found!");
             }
         }
-    [Test]
+        [Test]
         [TestCase("john", "ph")]
         [TestCase("nhon", "hp")]
         [TestCase("john", "hp")]
@@ -52,8 +52,6 @@ namespace UIAtomation
             var mainWindow = AutomationElement.RootElement.FindFirst(TreeScope.Children, new AndCondition(
                 new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window),
                 new PropertyCondition(AutomationElement.ClassNameProperty, "NavigationWindow")));
-            var allButtons = mainWindow.FindAll(TreeScope.Children, new PropertyCondition(
-                AutomationElement.ControlTypeProperty, ControlType.Button));
 
             var LoginField = mainWindow.FindFirst(TreeScope.Children, new AndCondition(
                 new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit),
@@ -63,7 +61,9 @@ namespace UIAtomation
             var PasswordField = mainWindow.FindFirst(TreeScope.Children, new AndCondition(
                 new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit),
                 new PropertyCondition(AutomationElement.ClassNameProperty, "PasswordBox")));
+
             var typepassword = PasswordField.GetCurrentPattern(ValuePattern.Pattern) as ValuePattern;
+
             typelogin.SetValue(loginvalue);
             typepassword.SetValue(passwordvalue);
             string variable = "okButton";
@@ -83,12 +83,45 @@ namespace UIAtomation
             }
             else
             {
+                mainWindow = AutomationElement.RootElement.FindFirst(TreeScope.Children, new AndCondition(
+                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window),
+                new PropertyCondition(AutomationElement.ClassNameProperty, "NavigationWindow")));
                 var johnsmith = mainWindow.FindFirst(TreeScope.Children, new AndCondition(
                     new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Text),
                     new PropertyCondition(AutomationElement.AutomationIdProperty, "usernameTitle")));
                 Assert.AreEqual("John Smith",ClassicBase.Properties.GetName(johnsmith));
             }
             Thread.Sleep(2000);
+
+        }
+
+        [Test]
+        public void OrderNumber()
+        {
+           Login("john", "hp");
+            Thread.Sleep(1000);
+            var mainWindow = AutomationElement.RootElement.FindFirst(TreeScope.Children, new AndCondition(
+            new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window),
+            new PropertyCondition(AutomationElement.ClassNameProperty, "NavigationWindow")));
+
+            var tabs = AutomationElement.RootElement.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.TabItem));
+
+            var search_order = tabs.Cast<AutomationElement>().ToList().First(tab => tab.Current.Name.Equals("SEARCH ORDER"));
+
+            ClassicBase.Properties.SelectionItem.SelectItem(search_order);
+            var radio_button = AutomationElement.RootElement.FindFirst(TreeScope.Children, new AndCondition(
+                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.RadioButton),
+                new PropertyCondition(AutomationElement.AutomationIdProperty, "byNumberRadio")));
+            var order_number = AutomationElement.RootElement.FindFirst(TreeScope.Children, new AndCondition(
+                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit),
+                new PropertyCondition(AutomationElement.AutomationIdProperty, "byNumberWatermark")));
+            Assert.AreEqual(ClassicBase.Properties.Selection.GetSelectionItems(radio_button),ClassicBase.Properties.IsEnabled(order_number));
+
+           /* if (ClassicBase.Properties. (radio_button) == false )
+            {
+                var disabled = ClassicBase.Properties.IsEnabled(order_number);
+                
+            }*/
 
         }
     }

@@ -26,6 +26,7 @@ namespace Baseclass
             /// </summary>
             /// <returns>Boolean - True or False</returns>
             /// <remarks>Support Control Type: All</remarks>
+            
             public static bool IsEnabled(AutomationElement element)
             {
                 var isEnabled = false;
@@ -579,6 +580,16 @@ namespace Baseclass
 
                     return ismultiple;
                 }
+                /*public static bool IsSelected(AutomationElement element)
+                {
+                    var isSelected = false;
+                    if (IsSupportPattern(element, SelectionItemPattern.Pattern))
+                    {
+                        var pattern = (SelectionPattern)element.GetCurrentPattern(SelectionPattern.Pattern);
+                        isSelected = pattern.Current.
+                    }
+                }*/
+
 
                 /// <summary>
                 /// Get all child selection name of the control
