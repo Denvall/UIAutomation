@@ -8,6 +8,7 @@ using NUnit.Framework;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Automation;
+using UIAutomation.Find;
 
 namespace UIAtomation
 {
@@ -33,9 +34,10 @@ namespace UIAtomation
             Process[] processlist = Process.GetProcessesByName(Param.target_name);
             try
             {
-                foreach(Process theprocess in processlist){
-                theprocess.Kill();
-                    }
+                foreach (Process theprocess in processlist)
+                {
+                    theprocess.Kill();
+                }
             }
             catch (InvalidOperationException)
             {
@@ -46,7 +48,7 @@ namespace UIAtomation
         [TestCase("john", "ph")]
         [TestCase("nhon", "hp")]
         [TestCase("john", "hp")]
-        public void Login(string loginvalue,string passwordvalue)
+        public void Login(string loginvalue, string passwordvalue)
 
         {
             var mainWindow = AutomationElement.RootElement.FindFirst(TreeScope.Children, new AndCondition(
@@ -74,12 +76,12 @@ namespace UIAtomation
             Thread.Sleep(1000);
             if (loginvalue != "john" || passwordvalue != "hp")
             {
-                    var error = mainWindow.FindFirst(TreeScope.Children, new AndCondition(
-                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window),
-                    new PropertyCondition(AutomationElement.ClassNameProperty, "#32770")));
-                    Assert.IsTrue(ClassicBase.Properties.IsEnabled(error));
-                    string failed = ClassicBase.Properties.GetName(error);
-                    Assert.AreEqual("Login Failed", failed);
+                var error = mainWindow.FindFirst(TreeScope.Children, new AndCondition(
+                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window),
+                new PropertyCondition(AutomationElement.ClassNameProperty, "#32770")));
+                Assert.IsTrue(ClassicBase.Properties.IsEnabled(error));
+                string failed = ClassicBase.Properties.GetName(error);
+                Assert.AreEqual("Login Failed", failed);
             }
             else
             {
@@ -89,7 +91,7 @@ namespace UIAtomation
                 var johnsmith = mainWindow.FindFirst(TreeScope.Children, new AndCondition(
                     new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Text),
                     new PropertyCondition(AutomationElement.AutomationIdProperty, "usernameTitle")));
-                Assert.AreEqual("John Smith",ClassicBase.Properties.GetName(johnsmith));
+                Assert.AreEqual("John Smith", ClassicBase.Properties.GetName(johnsmith));
             }
             Thread.Sleep(2000);
 
