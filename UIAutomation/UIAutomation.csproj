@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Baseclass.cs" />
+    <Compile Include="controls.cs" />
+    <Compile Include="FindControl.cs" />
     <Compile Include="PatternEnum.cs" />
     <Compile Include="TestClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
