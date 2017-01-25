@@ -97,106 +97,38 @@ namespace UIAtomation
 
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         [Test]
         public void OrderNumber()
         {
            Login("john", "hp");
             Thread.Sleep(1000);
-            var mainWindow = AutomationElement.RootElement.FindFirst(TreeScope.Children, new AndCondition(
-            new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window),
-            new PropertyCondition(AutomationElement.ClassNameProperty, "NavigationWindow")));
-
-            var tabs = AutomationElement.RootElement.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.TabItem));
+            var mainwindow = ControlFinder.FindByClassName(ControlType.Window, "NavigationWindow");
+            var tabs = mainwindow.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.TabItem));
 
             var search_order = tabs.Cast<AutomationElement>().ToList().First(tab => tab.Current.Name.Equals("SEARCH ORDER"));
 
             ClassicBase.Properties.SelectionItem.SelectItem(search_order);
-            var radio_button = AutomationElement.RootElement.FindFirst(TreeScope.Children, new AndCondition(
-                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.RadioButton),
-                new PropertyCondition(AutomationElement.AutomationIdProperty, "byNumberRadio")));
-            var order_number = AutomationElement.RootElement.FindFirst(TreeScope.Children, new AndCondition(
-                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit),
-                new PropertyCondition(AutomationElement.AutomationIdProperty, "byNumberWatermark")));
-            Assert.AreEqual(ClassicBase.Properties.Selection.GetSelectionItems(radio_button),ClassicBase.Properties.IsEnabled(order_number));
 
-           /* if (ClassicBase.Properties. (radio_button) == false )
-            {
-                var disabled = ClassicBase.Properties.IsEnabled(order_number);
-                
-            }*/
+            var radio_button = ControlFinder.FindByAutomationId(ControlType.RadioButton, "byNumberRadio");
+            var order_number = ControlFinder.FindByAutomationId(ControlType.Edit, "byNumberWatermark");
+            bool order_number_selected = order_number.Current.IsEnabled;
+            
+            var selected = radio_button.GetCurrentPattern(SelectionItemPattern.Pattern) as SelectionItemPattern;
+            bool is_radio_selected = selected.Current.IsSelected;
+            Assert.AreEqual(is_radio_selected, order_number_selected);
+            Thread.Sleep(1000);
 
+           ClassicBase.Properties.SelectionItem.SelectItem(radio_button);
+           var type = order_number.GetCurrentPattern(ValuePattern.Pattern) as ValuePattern;
+           var search = ControlFinder.FindByAutomationId(ControlType.Button, "searchBtn");
+           Assert.AreEqual(false, search.Current.IsEnabled);
+           type.SetValue("123456");
+           Assert.AreEqual(true, search.Current.IsEnabled);
+           Thread.Sleep(1000);
+           ClassicBase.Properties.Invoke.Click(search);
+           var error_message = ControlFinder.FindByAutomationId(ControlType.Text, "65535");
+           var error_text = ClassicBase.Properties.GetName(error_message);
+           Assert.AreEqual("Order number does not exist.", error_text);
         }
     }
 }

@@ -12,9 +12,9 @@ namespace UIAutomation.Find
         public static AutomationElement FindByAutomationId(ControlType controltype, string automationId)
         {
             AutomationElement rootElement = AutomationElement.RootElement;
-            AutomationElement element = rootElement.FindFirst(TreeScope.Children, new AndCondition(
+            AutomationElement element = rootElement.FindFirst(TreeScope.Descendants, new AndCondition(
                 new PropertyCondition(AutomationElement.ControlTypeProperty, controltype),
-                new PropertyCondition(AutomationElement.ClassNameProperty, automationId)));
+                new PropertyCondition(AutomationElement.AutomationIdProperty, automationId)));
 
             if (element != null)
             {
@@ -30,7 +30,7 @@ namespace UIAutomation.Find
         public static AutomationElement FindByClassName(ControlType controltype, string classname)
         {
             AutomationElement rootElement = AutomationElement.RootElement;
-            AutomationElement element = rootElement.FindFirst(TreeScope.Children, new AndCondition(
+            AutomationElement element = rootElement.FindFirst(TreeScope.Descendants, new AndCondition(
                 new PropertyCondition(AutomationElement.ControlTypeProperty, controltype),
                 new PropertyCondition(AutomationElement.ClassNameProperty, classname)));
 
@@ -43,8 +43,8 @@ namespace UIAutomation.Find
                 throw new Exception("Element is null!");
             }
         }
-        public static AutomationElementCollection FindAll()
-        { }
+       // public static AutomationElementCollection FindAll()
+        //{ }
     }
 }
 
