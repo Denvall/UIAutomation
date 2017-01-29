@@ -110,7 +110,10 @@ namespace UIAtomation
             string order = SpecialActions.GetOrderNumber();
             string PriceExpected  = SpecialActions.GetTicketPrice();
             string TotalExpected = SpecialActions.GetTotalPrice();
-            Actions.Click(NewSearchButton);
+            AfterTest();
+            BeforeEachTest();
+            Login("john", "hp");
+            ///Actions.Click(NewSearchButton);
             SpecialActions.SelectSearchOrderTab();
             Actions.SelectItem("byNumberRadio");
             Actions.SetValue("byNumberWatermark",order);
